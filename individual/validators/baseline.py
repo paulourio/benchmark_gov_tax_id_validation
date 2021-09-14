@@ -1,0 +1,116 @@
+"""Baseline code from rafahlobo/cpfValidator."""
+
+
+def baseline_validate(tax_id: str) -> bool:
+    # Check if type is str
+    if not isinstance(tax_id, str):
+        return False
+
+    # Remove some unwanted characters
+    # tax_id = re.sub("[^0-9]",'',tax_id)
+
+    # Verify if CPF number is equal
+    if (tax_id == '00000000000' or tax_id == '11111111111'
+            or tax_id == '22222222222' or tax_id == '33333333333'
+            or tax_id == '44444444444' or tax_id == '55555555555'
+            or tax_id == '66666666666' or tax_id == '77777777777'
+            or tax_id == '88888888888' or tax_id == '99999999999'):
+        return False
+
+    # Checks if string has 11 characters
+    if len(tax_id) != 11:
+        return False
+
+    sum = 0
+    weight = 10
+
+    # Calculating the first tax_id check digit.
+    for n in range(9):
+        sum = sum + int(tax_id[n]) * weight
+
+        # Decrement weight
+        weight = weight - 1
+
+    verifyingDigit = 11 - sum % 11
+
+    if verifyingDigit > 9:
+        firstVerifyingDigit = 0
+    else:
+        firstVerifyingDigit = verifyingDigit
+
+    # Calculating the second check digit of tax_id.
+    sum = 0
+    weight = 11
+    for n in range(10):
+        sum = sum + int(tax_id[n]) * weight
+
+        # Decrement weight
+        weight = weight - 1
+
+    verifyingDigit = 11 - sum % 11
+
+    if verifyingDigit > 9:
+        secondVerifyingDigit = 0
+    else:
+        secondVerifyingDigit = verifyingDigit
+
+    if tax_id[-2:] == '%s%s' % (firstVerifyingDigit, secondVerifyingDigit):
+        return True
+    return False
+
+
+_EDGE_CASES = {d*11 for d in range(10)}
+
+
+def baseline_set_validate(tax_id: str) -> bool:
+    # Check if type is str
+    if not isinstance(tax_id, str):
+        return False
+
+    # Remove some unwanted characters
+    # tax_id = re.sub("[^0-9]",'',tax_id)
+
+    # Verify if CPF number is equal
+    if tax_id in _EDGE_CASES:
+        return False
+
+    # Checks if string has 11 characters
+    if len(tax_id) != 11:
+        return False
+
+    sum = 0
+    weight = 10
+
+    # Calculating the first tax_id check digit. 
+    for n in range(9):
+        sum = sum + int(tax_id[n]) * weight
+
+        # Decrement weight
+        weight = weight - 1
+
+    verifyingDigit = 11 - sum % 11
+
+    if verifyingDigit > 9:
+        firstVerifyingDigit = 0
+    else:
+        firstVerifyingDigit = verifyingDigit
+
+    # Calculating the second check digit of tax_id.
+    sum = 0
+    weight = 11
+    for n in range(10):
+        sum = sum + int(tax_id[n]) * weight
+
+        # Decrement weight
+        weight = weight - 1
+
+    verifyingDigit = 11 - sum % 11
+
+    if verifyingDigit > 9:
+        secondVerifyingDigit = 0
+    else:
+        secondVerifyingDigit = verifyingDigit
+
+    if tax_id[-2:] == '%s%s' % (firstVerifyingDigit, secondVerifyingDigit):
+        return True
+    return False
